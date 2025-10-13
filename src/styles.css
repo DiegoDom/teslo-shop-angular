@@ -1,1 +1,53 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss';
+
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark, night, teslo;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/assets/fonts/montserrat-alternates/MontserratAlternates-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* @plugin "daisyui/theme" {
+  name: 'teslo';
+  default: true;
+  prefersdark: true;
+  color-scheme: 'dark';
+  --font-family: 'Montserrat', ui-sans-serif, system-ui;
+} */
+
+html,
+body {
+  font-family: 'Montserrat', ui-sans-serif, system-ui;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+}
