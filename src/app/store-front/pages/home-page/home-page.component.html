@@ -1,11 +1,18 @@
 <div class="mb-5">
   <h1 class="text-3xl font-bold">All products</h1>
-  <h2 class="text-xl">For everybody</h2>
+  <h2 class="text-xl">For <span class="text-accent">everybody</span></h2>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-  <product-card />
-  <product-card />
-  <product-card />
-  <product-card />
+  @if (productsResource.hasValue()) {
+  <!--  -->
+  @for (product of productsResource.value().products; track product.id) {
+  <product-card [product]="product" />
+  }
+  <!--  -->
+  }
+  <!--  -->
+  @if (productsResource.status() === 'loading') {
+  <app-loader />
+  }
 </div>

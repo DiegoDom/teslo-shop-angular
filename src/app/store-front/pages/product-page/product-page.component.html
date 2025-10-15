@@ -1,1 +1,16 @@
-<p>product-page works!</p>,
+@if (productResource.hasValue()) {
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+  @let product = productResource.value();
+  <!-- images -->
+  <product-images-carousel [images]="product.images" />
+  <div>
+    <h1 class="text-2xl font-bold">{{ product.title }}</h1>
+    <div class="divider"></div>
+    <p>{{ product.description }}</p>
+  </div>
+</div>
+}
+<!--  -->
+@if (productResource.status() === 'loading') {
+<app-loader />
+}

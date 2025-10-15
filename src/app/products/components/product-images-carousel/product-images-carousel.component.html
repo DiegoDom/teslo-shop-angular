@@ -1,0 +1,23 @@
+<!-- Slider main container -->
+<div class="swiper" #swiperDiv>
+  <!-- Additional required wrapper -->
+  <div class="swiper-wrapper">
+    <!-- Slides -->
+    @for (image of images(); track $index) {
+    <div class="swiper-slide">
+      <figure>
+        <img
+          [src]="image | productImage"
+          [alt]="`Product image ${$index + 1}`"
+          class="w-full object-cover"
+        />
+      </figure>
+    </div>
+
+    }
+  </div>
+  <div class="swiper-pagination"></div>
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+  <div class="swiper-scrollbar"></div>
+</div>

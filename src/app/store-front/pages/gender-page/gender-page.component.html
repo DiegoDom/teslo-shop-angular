@@ -1,1 +1,20 @@
-<p>gender-page works!</p>,
+<div class="mb-5">
+  <h1 class="text-3xl font-bold">All products</h1>
+  <h2 class="text-xl">
+    For <span class="text-accent">{{ gender() | uppercase }}</span>
+  </h2>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+  @if (productsResource.hasValue()) {
+  <!--  -->
+  @for (product of productsResource.value().products; track product.id) {
+  <product-card [product]="product" />
+  }
+  <!--  -->
+  }
+  <!--  -->
+  @if (productsResource.status() === 'loading') {
+  <app-loader />
+  }
+</div>
