@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { ProductsService } from '@products/services/products.service';
-import { LoaderComponent } from '@shared/loader/loader.component';
+import { LoaderComponent } from '@shared/components/loader/loader.component';
 import { ProductImagesCarouselComponent } from '@products/components/product-images-carousel/product-images-carousel.component';
 
 @Component({

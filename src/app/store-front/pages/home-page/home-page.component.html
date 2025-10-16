@@ -3,16 +3,23 @@
   <h2 class="text-xl">For <span class="text-accent">everybody</span></h2>
 </div>
 
+<app-pagination />
+
+@if (productsResource.hasValue()) {
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-  @if (productsResource.hasValue()) {
   <!--  -->
   @for (product of productsResource.value().products; track product.id) {
   <product-card [product]="product" />
   }
   <!--  -->
-  }
-  <!--  -->
-  @if (productsResource.status() === 'loading') {
-  <app-loader />
-  }
 </div>
+<app-pagination
+  [totalPages]="productsResource.value().pages"
+  [currentPage]="paginationService.currentPage()"
+/>
+}
+<!--  -->
+
+@if (productsResource.status() === 'loading') {
+<app-loader />
+}
