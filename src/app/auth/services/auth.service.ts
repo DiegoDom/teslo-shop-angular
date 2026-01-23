@@ -14,7 +14,7 @@ type AuthStatus = 'checking' | 'authenticated' | 'not-authenticated';
 export class AuthService {
   private _authStatus = signal<AuthStatus>('checking');
   private _user = signal<User | null>(null);
-  private _token = signal<string | null>(null);
+  private _token = signal<string | null>(localStorage.getItem('token') || null);
   private http = inject(HttpClient);
 
   authStatus = computed<AuthStatus>(() => {
@@ -37,27 +37,25 @@ export class AuthService {
   login(email: string, password: string): Observable<boolean> {
     return this.http.post<AuthResponse>(`${baseURL}/auth/login`, { email, password }).pipe(
       map((resp) => this.handleSuccessAuth(resp)),
-      catchError((error: any) => this.handleErrorAuth(error))
+      catchError((error: any) => this.handleErrorAuth(error)),
     );
   }
 
   checkStatus(): Observable<boolean> {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
+    if (!this.token()) {
       this.logout();
       return of(false);
     }
 
     return this.http
       .get<AuthResponse>(`${baseURL}/auth/check-status`, {
-        headers: {
+        /* headers: {
           Authorization: `Bearer ${token}`,
-        },
+        }, */
       })
       .pipe(
         map((resp) => this.handleSuccessAuth(resp)),
-        catchError((error: any) => this.handleErrorAuth(error))
+        catchError((error: any) => this.handleErrorAuth(error)),
       );
   }
 
@@ -65,6 +63,7 @@ export class AuthService {
     this._user.set(null);
     this._token.set(null);
     this._authStatus.set('not-authenticated');
+
     localStorage.removeItem('token');
   }
 
