@@ -35,19 +35,24 @@ export class ProductsService {
           offset,
         },
       })
-      .pipe(
-        tap((resp) => console.log(resp)),
-        tap((resp) => this.productsCache.set(key, resp))
-      );
+      .pipe(tap((resp) => this.productsCache.set(key, resp)));
   }
 
   getProductByIdSlug(idSlug: string): Observable<Product> {
     if (this.singleProductsCache.has(idSlug)) {
       return of(this.singleProductsCache.get(idSlug)!);
     }
-    return this.http.get<Product>(`${baseURL}/products/${idSlug}`).pipe(
-      tap((product) => console.log(product)),
-      tap((product) => this.singleProductsCache.set(idSlug, product))
-    );
+    return this.http
+      .get<Product>(`${baseURL}/products/${idSlug}`)
+      .pipe(tap((product) => this.singleProductsCache.set(idSlug, product)));
+  }
+
+  getProductById(id: string): Observable<Product> {
+    if (this.singleProductsCache.has(id)) {
+      return of(this.singleProductsCache.get(id)!);
+    }
+    return this.http
+      .get<Product>(`${baseURL}/products/${id}`)
+      .pipe(tap((product) => this.singleProductsCache.set(id, product)));
   }
 }

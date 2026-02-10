@@ -1,0 +1,19 @@
+<h1 class="text-2xl font-bold">All Products</h1>
+
+@if (productsResource.hasValue()) {
+<h3 class="text-lg">Products count <span class="text-accent">{{ productsResource.value().count }}</span></h3>
+<div class="divider"></div>
+<product-table [products]="productsResource.value().products" />
+<div class="flex flex-row justify-center gap-2 ">
+  <app-pagination
+    [totalPages]="productsResource.value().pages"
+    [currentPage]="paginationService.currentPage()"
+  />
+  <select #selectProductsPerPage (change)="productsPerPage.set(+selectProductsPerPage.value)" class="select select-bordered w-32 mt-4 mb-10">
+    <option [selected]="productsPerPage() === 10" value="10">10</option>
+    <option [selected]="productsPerPage() === 20" value="20">20</option>
+    <option [selected]="productsPerPage() === 50" value="50">50</option>
+    <option [selected]="productsPerPage() === 100" value="100">100</option>
+  </select>
+</div>
+}
