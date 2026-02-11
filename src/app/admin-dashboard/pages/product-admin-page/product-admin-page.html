@@ -4,6 +4,5 @@
 
 
 @if(productResource.hasValue()) {
-<h1 class="text-2xl">{{ productResource.value().title }}</h1>
+<product-details [product]="productResource.value()" />
 }
-

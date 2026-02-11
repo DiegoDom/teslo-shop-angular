@@ -14,6 +14,12 @@
       </figure>
     </div>
 
+    } @empty {
+    <div class="swiper-slide">
+      <figure>
+        <img [src]="null | productImage" alt="No image" class="w-full object-cover fadeIn" />
+      </figure>
+    </div>
     }
   </div>
   <div class="swiper-pagination"></div>
