@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { Gender, Product, ProductResponse } from '@products/interfaces/product.interface';
 import { environment } from 'src/environments/environment';
 import { User } from '@auth/interfaces/user.interface';
@@ -75,10 +75,17 @@ export class ProductsService {
       .pipe(tap((product) => this.singleProductsCache.set(id, product)));
   }
 
-  updateProduct(id: string, product: Partial<Product>): Observable<Product> {
-    return this.http
-      .patch<Product>(`${baseURL}/products/${id}`, product)
-      .pipe(tap((product) => this.updateProductsCache(product)));
+  updateProduct(id: string, product: Partial<Product>, images?: FileList): Observable<Product> {
+    const currentProductImages = product.images ?? [];
+
+    return this.uploadProductImages(images).pipe(
+      map((images) => ({
+        ...product,
+        images: [...currentProductImages, ...images],
+      })),
+      switchMap((product) => this.http.patch<Product>(`${baseURL}/products/${id}`, product)),
+      tap((product) => this.updateProductsCache(product)),
+    );
   }
 
   updateProductsCache(product: Product) {
@@ -102,15 +109,35 @@ export class ProductsService {
     });
   }
 
-  createProduct(product: Partial<Product>): Observable<Product> {
-    return this.http
-      .post<Product>(`${baseURL}/products`, product)
-      .pipe(tap((product) => this.updateProductsCache(product)));
+  createProduct(product: Partial<Product>, images?: FileList): Observable<Product> {
+    return this.uploadProductImages(images).pipe(
+      switchMap((images) => this.http.post<Product>(`${baseURL}/products`, { ...product, images })),
+      tap((product) => this.updateProductsCache(product)),
+    );
   }
 
   deleteProduct(id: string): Observable<void> {
     return this.http
       .delete<void>(`${baseURL}/products/${id}`)
       .pipe(tap(() => this.removeProductsCache(id)));
+  }
+
+  uploadProductImages(images?: FileList): Observable<string[]> {
+    if (!images) {
+      return of([]);
+    }
+
+    const uploadObservables = Array.from(images).map((image) => this.uploadImage(image));
+
+    return forkJoin(uploadObservables).pipe(tap((images) => console.log(images)));
+  }
+
+  uploadImage(image?: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', image!);
+
+    return this.http
+      .post<{ fileName: string }>(`${baseURL}/files/product`, formData)
+      .pipe(map((resp) => resp.fileName));
   }
 }
